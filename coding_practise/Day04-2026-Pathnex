@@ -1,0 +1,94 @@
+#--------------Day-04-----------
+
+ #--------Ansible----------
+
+    ---
+      - name : Install Multiple Packages
+        hosts : all
+	become : yes
+
+	tasks :
+	  - anme : Install tools
+	     yum :
+	       name :
+	         - git 
+		 - wget
+	       state : present
+
+
+#----------Terrsform----------------
+   
+     provide "aws" {
+        region "us-east-1"
+	}
+
+     resource "aws_key_pair" "PathnexKey" {
+         key_name = "PathnexKey"
+	 public_key = "ssh-rsa  AAAA...."
+	 }
+
+     resource "aws_instance" "PathnexEC2" {
+       ami = "ami-789789"
+       instance_type "c6i.8xlarge"
+       key_name = aws_key_pair.PathnexKey.Key-name
+
+       tags = {
+         Name = "Pathnex-EC2"
+	 }
+	 }
+
+#----------Kubernetes--------------
+
+   apiVersion : v1
+   kind : Service
+   metadata : 
+      name : pathnex-service
+   spec :
+     selector :
+       app : pathnex-app
+     ports :
+       - port : 80
+         targetPort : 80
+
+
+
+#------------Jenkins------------
+
+    pipeline {
+       agent any 
+         stage {
+	    stahe('Parallel Tasks' ) {
+	       parallel {
+	          stage('Build') {
+		    steps {
+		        sh 'mvn clean compile'
+			}
+			}
+		    stage('Test') {
+		       steps {
+		         sh 'mvn test'
+			 }}}}}}}
+
+
+#-------------- Git Lab----------------
+   
+   stages :
+       - build-test
+
+
+    maven-build :
+       stage : build- test 
+       image : maven:3.8.1-jdk-17
+       script :
+         - git clone url
+	 - cd sample-java-app
+	 - mvn clean compile
+
+    maven-test :
+      stage : build-test
+      image : maven:3.8.1-jdk-17
+      script:
+        - cd sample-app
+	- mvm test
+     parallel :1 
+

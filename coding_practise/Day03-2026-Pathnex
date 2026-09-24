@@ -1,0 +1,128 @@
+#-----------Day-03---------------
+
+#---------Ansible  -Create user----------
+  
+   ---
+    - name  : Create pathnex user
+      hosts : all
+      become : yes
+
+      tasks :
+         - anme  : Create Pathnex user
+	   user :
+	      name : pathnex-user
+	      shell :  /bin/bash
+#----------Terraform----------------
+
+  
+    porvider "aws" {
+       region = "us-east-1"
+       }
+
+     resource "aws_secutrity_group" "Pathnex5G" {
+       name = "Pathnex5G"
+       description = "Pathnex 5G for SSH"
+
+         ingress {
+	   from_port = 22
+	   to_port = 22
+	   protocol =  "tcp"
+	   cidr_blocks =["0.0.0.0/0"]
+	   }
+	   }
+
+	resource "aws_instsnce" "PathnexEC@" {
+	  ami = " ami-789789"
+	  instance_type = "r6i.4xlarge"
+	  vpc_security_group_ids = [aws_security_group.Pathnex5G.id]
+
+	  tags  = {
+	     Name = "Pathnex-EC@"
+	     }
+	     }
+
+#------------Kubernetes------------
+
+   apiVersion :  v1
+   kind :pod
+   metadata : 
+      name : pathenx-env-pod
+   spec :
+      conatiners :
+        - name : app
+	  image : nginx
+	  env :
+	     - name : APP_ENV
+	       value :  "production"
+
+#-----------shell------------
+
+   #!bin/bash
+   FILE =  "/tmp/pathnnex.txt"
+
+   if [ -f "$FILE" ];  then
+      echo "Fele exixts"
+    else 
+       echo "File does not exist"
+     fi
+
+#-----------Jenkins-----------------
+
+
+
+   piepline {
+      agent any 
+         tools {
+	    nodejs 'NodeJS-16'
+	    }
+	    stages {
+	       stage ('Checkout') {
+	          steps {
+		    git url : 'url'
+		    }
+		    }
+	       stage('Install Dependencies') {
+	          steps {
+		     sh 'npm install'
+		     }
+		     }
+		stage('Run Tests' {
+		   steps {
+		     sh  'npm test'
+		     }
+		     }
+		  stage('build') {
+		     steps('Build') {
+		       sh  'npm run build'
+		       }}}}
+
+
+#----------------GitLab-----------
+
+   stages :
+      - install
+      - test
+      - build
+
+    node-install :
+      stage : install
+      image : node:16
+      script :
+         - git clone 'url
+	 - git app
+	 - npm install
+
+     node-test:
+       stage : test
+       image : node:16
+       script :
+         - cd sample-node-app
+	 -  npm test
+
+     node-build :
+       stage : build 
+       image : node:16
+       script :
+         - cd sample-node-app
+	 - npm run build
+
